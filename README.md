@@ -69,3 +69,12 @@ objeto user a las peticiones haciendo hadcoding en el
 id de usuario que aparecerá como autor de las cartas
 en la base de datos, el campo owner de las cartas tendrá
 esta id sin importar quien las haya creado de verdad.
+
+![alt text](<Captura de pantalla 2024-10-17 141408.png>)
+
+Como ves en la captura de pantalla, yo si puedo correr
+el proyecto con npm run dev que ejecuta nodemon. También
+comprobé que funcionaran las request de las rutas antes
+de enviar el proyecto a revisión. La verdad no se como
+corregir el error que me dices, quizás podrías darme
+alguna sugerencia de como hacerlo.
