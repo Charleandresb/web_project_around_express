@@ -1,46 +1,71 @@
 # Tripleten web_project_around_express
 
-Este proyecto da los primeros pasos para crear un servidor
-para Around the USA.
+Proyecto para crear una base de datos para Around USA.
 
-Se utilizó el framework Express para ensamblar el servidor y
-desplegarlo con mayor rapidez debido a la versatilidad de sus
-funcionalidades implementadas.
+Se utilizó el servicio de MongoDB Atlas para crear una
+base de datos llamada "aroundb" alojada en la web.
 
-La distribución de archivos en el proyecto está hecha con
-JavaScript modular en lugar de CommonJS, ya que utilizar módulos
-es una práctica más actualizada.
+Conexión establecida al servidor de MongoDB a través de
+mongoose con el método connect en el archivo de entrada
+de la aplicación app.js.
 
-Incorporación del linter Eslint con sus reglas configuradas para
-permitir el uso de guiones bajos, por ejemplo para el importante id,
-console.log y saltos de línea.
+Se crearon esquemas y modelos para la creación de usuarios
+y cartas:
 
-Hot reload a través de Nodemon para reiniciar el servidor cuando
-se hagan cambios en el código de los archivos del proyecto.
+Esquema y modelo de usuarios:
+Tres campos obligatorios de tipo sting, uno para el nombre,
+uno para la información y otro para el avatar. El campo
+avatar cuenta con una lógica de validación, la cual emplea
+la escritura de una expresión regular que valida un string
+de opciones de url. El modelo de este esquema fue nombrado
+y exportado como "user".
 
-El punto de entrada del servidor es app.js, se usó una variable de
-entorno para especificar el numero de puerto en el cual correrá
-el servidor. Aquí se inicializa el servidor en la variable app, la
-cual a través del método use utiliza los middleware necesarios
-para la correcta ejecución del servidor.
+Esquema y modelo de cartas:
+Dos campos de tipo string obligatorios para el nombre y el
+link de las cartas. El tercer campo requerido es owner que
+es de tipo ObjectId, almacena el id del usuario que creó la
+carta haciendo referencia al esquema del modelo user.
+El campo likes es un array también de tipo ObjectId que
+contiene los id de los usuarios que han dado "like" a la
+carta, su valor por defecto es un array vacío.
+Por último el campo createdAt es de tipo Date valor por
+defecto Date.now que indica la fecha y hora en que la
+carta fue creada. El modelo de este esquema fue nombrado
+y exportado como "card".
 
-El directorio data almacena los archivos json que contienen los
-datos de los usuarios y las cartas. Estos datos son enviados
-a través de las peticiones GET que se especifican en los archivos
-contenidos en el directorio routes.
+Implementación de controladores de ruta:
 
-El empaquetador de rutas Router proporcionado por Express, permite
-utilizar el método get para especificar las rutas de las peticiones
-y crear la lógica para cada una de ellas.
+Usuarios:
+Cinco funciones para los controladores de ruta para los
+usuarios, cada una con un método especifico del modelo User.
+Estos controladores pueden obtener la lista de usuarios,
+encontrar un usuario por su id, crear un usuario en la base
+de datos, editar el nombre y ocupación del usuario creado,
+y actualizar su avatar.
 
-Se utilizó el módulo fs para interactuar con el sistema de archivos,
-y así, a través de su método readFile poder leer los datos de los
-archivos json; si hay un error de registra en la consola, si no lo hay
-se envían los datos solicitados.
+Cartas:
+Cinco funciones para los controladores de ruta para las
+cartas, cada una con un método especifico del modelo Card.
+Estos controladores pueden obtener la lista de cartas,
+encontrar una carta por su id, crear una carta en la base
+de datos, registrar un id de usuario en el array del campo
+likes del esquema de cartas, como también removerlo.
 
-Para la solicitud de un usuario en especifico a través de su id, se
-empleó el uso de una ruta dinámica. Se utiliza el método find en
-los datos para comprobar si el id de usuario es igual al parámetro
-de solicitud de la ruta dinámica; si no es así se envía un mensaje
-de error con su estado (404 not found), si los id coinciden se envía
-la información del usuario solicitado.
+Cada una de estas funciones de los controladores de ruta
+cuenta con su manejo de errores correspondiente. Las
+funciones encargadas de encontrar usuarios o cartas por su
+id y ejecutar una acción de acuerdo a ellas, cuentan con el
+método ayudante para el manejo de errores llamado orFail,
+el cual optimiza el código al ejecutarse cuando no se
+encuentra dicho id, arrojando una instancia del objeto Error
+e impidiendo que then devuelva null con un estado 200 ok,
+pasando directamente al bloque catch que muestra el
+correspondiente código de estado de error y su mensaje.
+
+Solución para la autorización temporal:
+
+Se implementó un middleware en app.js, el cual agrega un
+objeto user a las peticiones haciendo hadcoding en el
+id de usuario que aparecerá como autor de las cartas
+en la base de datos, el campo owner de las cartas tendrá
+esta id sin importar quien las haya creado de verdad.
