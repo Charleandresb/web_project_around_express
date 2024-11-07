@@ -78,3 +78,6 @@ comprobé que funcionaran las request de las rutas antes
 de enviar el proyecto a revisión. La verdad no se como
 corregir el error que me dices, quizás podrías darme
 alguna sugerencia de como hacerlo.
+
+Solución:
+MongoDB Atlas, netwwork access 0.0.0.0/0 (IP Global)

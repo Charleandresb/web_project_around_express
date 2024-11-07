@@ -1,4 +1,5 @@
 import User from "../models/users.js";
+import generateToken from "../helper/generateToken.js";
 
 export async function getUsers(req, res) {
   await User.find({})
@@ -32,13 +33,17 @@ export async function getUserById(req, res) {
     });
 }
 
+export async function getUserInfo(req, res) {
+  const user = await User.findById(id);
+  res.send(user);
+}
+
 export async function createUser(req, res) {
-  const { name, about, avatar } = req.body;
+  const { email, password } = req.body;
 
   await User.create({
-    name,
-    about,
-    avatar,
+    email,
+    password,
   })
     .then((newUser) => {
       res.send(newUser);
@@ -49,6 +54,20 @@ export async function createUser(req, res) {
         .status(400)
         .send({ message: "No se ha creado el usuario por datos inválidos" });
     });
+}
+
+export async function loginUser(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email, password });
+    if (user === null) {
+      return res.status(404).send("usuario no encontrado");
+    }
+    const token = generateToken(user);
+    res.send({ token });
+  } catch (error) {
+    res.status(500).send("Algo salió mal");
+  }
 }
 
 export async function editProfile(req, res) {

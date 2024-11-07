@@ -1,23 +1,27 @@
 import express from "express";
+import { createUser, loginUser } from "./controllers/users.js";
 import usersRoutes from "./routes/users.js";
 import cardsRoutes from "./routes/cards.js";
 import { notFoundRoute } from "./routes/utils.js";
+import auth from "./middlewares/auth.js";
 import mongoose from "mongoose";
+import cors from "cors";
+import "dotenv/config"; // dependencia para mongoose.connect(variable de entorno)
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
 mongoose
-  .connect(
-    "mongodb+srv://charlesb:50lD0mil%40@cluster0.t5jkb.mongodb.net/aroundb?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(process.env.DIREC_AROUND_MONGODB_ATLAS)
   .then(() => {
     console.log("conectado a la base de datos");
   })
   .catch((err) => {
     console.log("algo salió mal", err);
   });
+
+app.use(cors());
 
 app.use(express.json());
 
@@ -28,6 +32,11 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.post("/users/signup", createUser);
+app.post("/users/signin", loginUser);
+
+app.use(auth);
 
 app.use("/users", usersRoutes);
 app.use("/cards", cardsRoutes);
