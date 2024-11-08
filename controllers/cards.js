@@ -18,11 +18,12 @@ export async function getCards(req, res) {
 
 export async function createCard(req, res) {
   const { name, link } = req.body;
+  const { userId } = req.user.userId;
 
   await Card.create({
     name,
     link,
-    owner: req.user._id,
+    owner: userId,
   })
     .then((newCard) => {
       res.send(newCard);
@@ -52,9 +53,11 @@ export async function deleteCardById(req, res) {
 }
 
 export async function likeCard(req, res) {
+  const { userId } = req.user.userId;
+
   await Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: userId } },
     { new: true }
   )
     .orFail(() => {
@@ -72,9 +75,11 @@ export async function likeCard(req, res) {
 }
 
 export async function dislikeCard(req, res) {
+  const { userId } = req.user.userId;
+
   await Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: userId } },
     { new: true }
   )
     .orFail(() => {

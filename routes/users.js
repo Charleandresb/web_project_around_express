@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/", getUsers);
 router.get("/:id", getUserById);
-router.get("/userinfo", getUserInfo);
+router.get("/me", getUserInfo);
 router.patch("/me", editProfile);
 router.patch("/me/avatar", editAvatar);
 

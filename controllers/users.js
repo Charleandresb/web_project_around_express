@@ -34,7 +34,8 @@ export async function getUserById(req, res) {
 }
 
 export async function getUserInfo(req, res) {
-  const user = await User.findById(id);
+  const { userId } = req.user.userId;
+  const user = await User.findById(userId);
   res.send(user);
 }
 
@@ -72,8 +73,9 @@ export async function loginUser(req, res) {
 
 export async function editProfile(req, res) {
   const { name, about } = req.body;
+  const { userId } = req.user.userId;
 
-  await User.findByIdAndUpdate(req.user._id, {
+  await User.findByIdAndUpdate(userId, {
     name,
     about,
   })
@@ -93,8 +95,9 @@ export async function editProfile(req, res) {
 
 export async function editAvatar(req, res) {
   const { avatar } = req.body;
+  const { userId } = req.user.userId;
 
-  await User.findByIdAndUpdate(req.user._id, {
+  await User.findByIdAndUpdate(userId, {
     avatar,
   })
     .orFail(() => {

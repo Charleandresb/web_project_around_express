@@ -22,16 +22,15 @@ mongoose
   });
 
 app.use(cors());
-
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "670d4c649f6be94c5d23179a", // Hardcoding id
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: "670d4c649f6be94c5d23179a", // Hardcoding id
+//   };
 
-  next();
-});
+//   next();
+// });
 
 app.post("/users/signup", createUser);
 app.post("/users/signin", loginUser);
